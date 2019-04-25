@@ -20,7 +20,21 @@ test.dependsOn copyNativeLibsForModuleTests
 targetCompatibility = 10
 sourceCompatibility = 10
 
+def getCommitHash = { ->
+    def hashStdOut = new ByteArrayOutputStream()
+    exec {
+        commandLine "sh", "-c", "git log --pretty=format:%h | head -1"
+        standardOutput = hashStdOut
+    }
+
+    return hashStdOut.toString().trim()
+}
+
+
 sourceSets {
+
+    jar.baseName = 'aion_fastvm-' + getCommitHash()
+
     test {
         resources {
             srcDirs = ['test']
